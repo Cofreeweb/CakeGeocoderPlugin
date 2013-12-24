@@ -202,10 +202,12 @@ EOF;
       }
       elseif( isset( $marker ['element']))
       {
+        $width = isset( $marker ['width']) ? $marker ['width'] : '250px';
+        $height = isset( $marker ['height']) ? $marker ['height'] : '250px';
         $mapjs .= <<<EOF
           $('{$marker ['element']}').data( 'marker', {$marker ['makerObject']});
           google.maps.event.addListener( {$marker ['makerObject']}, 'click', function() {
-              {$this->map ['objectName']}.infoWindow.setContent( '<div style="width: 250px; height: 100px">' + $('{$marker ['element']}').html() + '</div>')
+              {$this->map ['objectName']}.infoWindow.setContent( '<div style="width: $width; height: $height">' + $('{$marker ['element']}').html() + '</div>')
               {$this->map ['objectName']}.infoWindow.open( {$this->map ['objectName']}.map, {$marker ['makerObject']});
           });          
 EOF;
@@ -230,28 +232,4 @@ EOF;
     )) . $js_block;
   }
 
-  /**
-   * After render callback.  afterRender is called after the view file is rendered
-   * but before the layout has been rendered.
-   *
-   * @access public
-   */
-  function afterRender() {
-  }
-
-  /**
-   * Before layout callback.  beforeLayout is called before the layout is rendered.
-   *
-   * @access public
-   */
-  function beforeLayout() {
-  }
-
-  /**
-   * After layout callback.  afterLayout is called after the layout has rendered.
-   *
-   * @access public
-   */
-  function afterLayout() {
-  }
 }
