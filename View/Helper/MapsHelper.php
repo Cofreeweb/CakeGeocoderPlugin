@@ -28,6 +28,11 @@ class MapsHelper extends AppHelper
           'inline' => false,
           'once' => true
       ));
+      
+      $this->Html->script( '/geocoder/js/markerclusterer', array(
+          'inline' => false,
+          'once' => true
+      ));
     }
   }
   
@@ -101,7 +106,8 @@ class MapsHelper extends AppHelper
         'height' => "500px",
         'objectName' => 'map',
         'id' => 'mapindex',
-        'zoom' => 10
+        'zoom' => 10,
+        'cluster' => false
     );
     
     $options = array_merge( $_options, $options);
@@ -155,6 +161,7 @@ class MapsHelper extends AppHelper
         mapTypeId: google.maps.MapTypeId.ROADMAP
       });
       {$this->map ['objectName']}.infoWindow = new google.maps.InfoWindow();
+      var markers = [];
 EOF;
 
     foreach( $this->markers as $key => $marker)
@@ -181,6 +188,7 @@ EOF;
         map: {$this->map ['objectName']}.map,
         icon: $icon_options
       });
+      markers.push( {$marker ['makerObject']});
 EOF;
 
       if( isset( $marker ['content']))
@@ -197,17 +205,24 @@ EOF;
         $mapjs .= <<<EOF
           $('{$marker ['element']}').data( 'marker', {$marker ['makerObject']});
           google.maps.event.addListener( {$marker ['makerObject']}, 'click', function() {
-              {$this->map ['objectName']}.infoWindow.setContent( $('{$marker ['element']}').html())
+              {$this->map ['objectName']}.infoWindow.setContent( '<div style="width: 250px; height: 100px">' + $('{$marker ['element']}').html() + '</div>')
               {$this->map ['objectName']}.infoWindow.open( {$this->map ['objectName']}.map, {$marker ['makerObject']});
           });          
 EOF;
       }
     }
     
-    $js_block = $this->Html->scriptBlock( 'var '. $this->map ['objectName'] .' = {map: null, infoWindow: null};');
-    $js = $mapjs;
-    // $js = 'google.maps.event.addDomListener(window, "load", function(){'. $mapjs .'});';
-    $this->Js->buffer( $js, true);
+    if( $this->map ['cluster'])
+    {
+      $cluster_options = json_encode( $this->map ['cluster']);
+      $mapjs .= <<<EOF
+        var mc = new MarkerClusterer(map.map, markers, $cluster_options);
+EOF;
+    }
+    
+    
+    $js_block = $this->Html->scriptBlock( $this->map ['objectName'] .' = {map: null, infoWindow: null};');
+    $this->Js->buffer( $mapjs, true);
     
     return $this->Html->tag( 'div', '', array(
         'id' => $this->map ['id'],

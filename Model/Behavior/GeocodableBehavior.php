@@ -67,6 +67,11 @@ class GeocodableBehavior extends ModelBehavior
       $params = array( $params);
     }
     
+    if( empty( $response))
+    {
+      return false;
+    }
+    
     foreach( $params as $param)
     {
       foreach( $response [0]->address_components as $address)
