@@ -102,8 +102,6 @@ class MapsHelper extends AppHelper
   public function create( $options = array())
   {
     $_options = array(
-        'width' => "100%",
-        'height' => "500px",
         'objectName' => 'map',
         'id' => 'mapindex',
         'zoom' => 10,
@@ -226,10 +224,34 @@ EOF;
     $js_block = $this->Html->scriptBlock( $this->map ['objectName'] .' = {map: null, infoWindow: null};');
     $this->Js->buffer( $mapjs, true);
     
-    return $this->Html->tag( 'div', '', array(
+    $attributes = array(
         'id' => $this->map ['id'],
-        'style' => 'width: '. $this->map ['width'] .'; height: '. $this->map ['height']
-    )) . $js_block;
+        
+    );
+    
+    if( isset( $this->map ['class']))
+    {
+      $attributes ['class'] = $this->map ['class'];
+    }
+    
+    if( isset( $this->map ['width']) || isset( $this->map ['height']))
+    {
+      $style = '';
+      
+      if( isset( $this->map ['width']))
+      {
+        $style = 'width: '. $this->map ['width'];
+      }
+      
+      if( isset( $this->map ['height']))
+      {
+        $style .= '; height: '. $this->map ['height'];
+      }
+      
+      $attributes ['style'] = $style;
+    }
+    
+    return $this->Html->tag( 'div', '', $attributes) . $js_block;
   }
 
 }
