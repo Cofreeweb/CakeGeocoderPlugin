@@ -105,7 +105,9 @@ class MapsHelper extends AppHelper
         'objectName' => 'map',
         'id' => 'mapindex',
         'zoom' => 10,
-        'cluster' => false
+        'cluster' => false,
+        'scrollwheel' => 'true',
+        
     );
     
     $options = array_merge( $_options, $options);
@@ -156,7 +158,8 @@ class MapsHelper extends AppHelper
       {$this->map ['objectName']}.map = new google.maps.Map(document.getElementById('{$this->map ['id']}'), {
         zoom: {$this->map ['zoom']},
         center: latLng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        scrollwheel: {$this->map ['scrollwheel']}
       });
       {$this->map ['objectName']}.infoWindow = new google.maps.InfoWindow();
       var markers = [];
