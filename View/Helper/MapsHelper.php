@@ -24,16 +24,26 @@ class MapsHelper extends AppHelper
   {
     if( !$this->request->is( 'ajax'))
     {
-      $this->Html->script( 'http://maps.google.com/maps/api/js?sensor=false&language='. $this->language, array(
-          'inline' => false,
-          'once' => true
-      ));
-      
-      $this->Html->script( '/geocoder/js/markerclusterer', array(
-          'inline' => false,
-          'once' => true
-      ));
+      $this->loadScripts();
     }
+  }
+
+/**
+ * Añade los scripts a los bufferes
+ * 
+ * @return void
+ */
+  public function loadScripts()
+  {
+    $this->Html->script( 'http://maps.google.com/maps/api/js?sensor=false&language='. $this->language, array(
+        'inline' => false,
+        'once' => true
+    ));
+    
+    $this->Html->script( '/geocoder/js/markerclusterer', array(
+        'inline' => false,
+        'once' => true
+    ));
   }
   
 /**
@@ -180,14 +190,25 @@ EOF;
         $marker ['icon']['options']['path'] = $path;
         $icon_options = $this->jsonize( $marker ['icon']['options']);
       }
+      else
+      {
+        $icon_options = array();
+      }
       
       $mapjs .= <<<EOF
       var latLng = new google.maps.LatLng( {$marker ['lat']}, {$marker ['lng']});
       var {$marker ['makerObject']} = new google.maps.Marker({
         position: latLng,
         title: '{$marker ['title']}',
-        map: {$this->map ['objectName']}.map,
-        icon: $icon_options
+        map: {$this->map ['objectName']}.map
+EOF;
+      if( !empty( $icon_options))
+      {
+        $mapjs .= <<<EOF
+        ,icon: $icon_option
+EOF;
+      }
+      $mapjs .= <<<EOF
       });
       markers.push( {$marker ['makerObject']});
 EOF;
