@@ -20,7 +20,7 @@ class MapsHelper extends AppHelper
   
   private $__cache = array(); 
   
-  public function beforeRender() 
+  public function beforeRender( $viewFile) 
   {
     if( !$this->request->is( 'ajax'))
     {
