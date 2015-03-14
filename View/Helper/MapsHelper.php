@@ -205,7 +205,7 @@ EOF;
       if( !empty( $icon_options))
       {
         $mapjs .= <<<EOF
-        ,icon: $icon_option
+        ,icon: $icon_options
 EOF;
       }
       $mapjs .= <<<EOF
