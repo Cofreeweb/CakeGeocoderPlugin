@@ -192,7 +192,7 @@ EOF;
       }
       else
       {
-        $icon_options = array();
+        $icon_options = $marker ['icon'];
       }
       
       $mapjs .= <<<EOF
