@@ -35,7 +35,7 @@ class MapsHelper extends AppHelper
  */
   public function loadScripts()
   {
-    $this->Html->script( 'http://maps.google.com/maps/api/js?sensor=false&language='. $this->language, array(
+    $this->Html->script( 'http://maps.google.com/maps/api/js?libraries=places&language='. $this->language, array(
         'inline' => false,
         'once' => true
     ));
